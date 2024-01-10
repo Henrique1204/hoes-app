@@ -12,13 +12,15 @@ import {
 
 import { ONE_SIGNAL_APP_ID_ANDROID, ONE_SIGNAL_APP_ID_IOS } from "@env";
 
-import { Routes } from "./src/routes";
+import { CartContextProvider } from "./src/contexts/CartContext";
+
+import { tagUserEmailCreate } from "./src/notifications/tagUserEmail";
 
 import { THEME } from "./src/theme";
-import { Loading } from "./src/components/Loading";
 
-import { CartContextProvider } from "./src/contexts/CartContext";
-import { tagUserEmailCreate } from "./src/notifications/tagUserEmailCreate";
+import { Routes } from "./src/routes";
+
+import { Loading } from "./src/components/Loading";
 
 const oneSingalAppId =
   Platform.OS === "ios" ? ONE_SIGNAL_APP_ID_IOS : ONE_SIGNAL_APP_ID_ANDROID;
