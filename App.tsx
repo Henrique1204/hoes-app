@@ -1,4 +1,4 @@
-import { StatusBar } from "react-native";
+import { Platform, StatusBar } from "react-native";
 
 import OneSignal from "react-native-onesignal";
 
@@ -10,7 +10,7 @@ import {
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
 
-import { ONE_SIGNAL_APP_ID } from "@env";
+import { ONE_SIGNAL_APP_ID_ANDROID, ONE_SIGNAL_APP_ID_IOS } from "@env";
 
 import { Routes } from "./src/routes";
 
@@ -18,8 +18,18 @@ import { THEME } from "./src/theme";
 import { Loading } from "./src/components/Loading";
 
 import { CartContextProvider } from "./src/contexts/CartContext";
+import { tagUserEmailCreate } from "./src/notifications/tagUserEmailCreate";
 
-OneSignal.setAppId(ONE_SIGNAL_APP_ID!);
+const oneSingalAppId =
+  Platform.OS === "ios" ? ONE_SIGNAL_APP_ID_IOS : ONE_SIGNAL_APP_ID_ANDROID;
+
+OneSignal.setAppId(oneSingalAppId);
+
+tagUserEmailCreate("pauloh16.pdr@gmail.com");
+
+OneSignal.promptForPushNotificationsWithUserResponse((response) => {
+  console.log({ response });
+});
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
