@@ -10,6 +10,24 @@ import { AppRoutes } from "./app.routes";
 
 import { Notification } from "../components/Notification";
 
+const linking = {
+  prefixes: [
+    "com.henrique1204.shoesapp://",
+    "igniteshoesapp://",
+    "exp+igniteshoesapp://",
+  ],
+  config: {
+    screens: {
+      details: {
+        path: "details/:productId",
+        parse: {
+          productId: (id: string) => id,
+        },
+      },
+    },
+  },
+};
+
 export function Routes() {
   const [notification, setNotification] = React.useState<OSNotification>();
 
@@ -33,12 +51,12 @@ export function Routes() {
   }, []);
 
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer theme={theme} linking={linking}>
       <AppRoutes />
 
       {!!notification && (
         <Notification
-          title={notification?.title}
+          data={notification}
           onClose={handleOnCloseNotification}
         />
       )}

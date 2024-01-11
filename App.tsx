@@ -36,6 +36,12 @@ OneSignal.promptForPushNotificationsWithUserResponse(() => {});
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
+  React.useEffect(() => {
+    const unsubscribe = OneSignal.setNotificationOpenedHandler(() => {});
+
+    return () => unsubscribe;
+  }, []);
+
   return (
     <NativeBaseProvider theme={THEME}>
       <StatusBar

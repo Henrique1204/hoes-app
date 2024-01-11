@@ -7,14 +7,23 @@ import {
   Pressable,
 } from "native-base";
 
+import { OSNotification } from "react-native-onesignal";
+
 import { Ionicons } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
 
 type Props = {
-  title?: string;
+  data?: OSNotification;
   onClose: () => void;
 };
 
-export function Notification({ title, onClose }: Props) {
+export function Notification({ data, onClose }: Props) {
+  const handleOnPress = () => {
+    if (data?.launchURL) Linking.openURL(data.launchURL);
+
+    onClose();
+  };
+
   return (
     <Pressable
       w="full"
@@ -23,6 +32,7 @@ export function Notification({ title, onClose }: Props) {
       bgColor="gray.200"
       position="absolute"
       top={0}
+      onPress={handleOnPress}
     >
       <HStack justifyContent="space-between" alignItems="center">
         <Icon
@@ -34,7 +44,7 @@ export function Notification({ title, onClose }: Props) {
         />
 
         <Text fontSize="md" color="black" flex={1}>
-          {title}
+          {data?.title}
         </Text>
 
         <IconButton
