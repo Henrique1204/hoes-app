@@ -1,23 +1,27 @@
-import { createContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useState, ReactNode, useEffect } from "react";
 
 import {
   StorageCartProps,
   storageProductSave,
   storageProductRemove,
   storageProductGetAll,
-} from '../storage/storageCart';
+} from "../storage/storageCart";
+
+import { tagCartCreate } from "../notifications/tagCart";
 
 export type CartContextDataProps = {
   addProductCart: (newProduct: StorageCartProps) => Promise<void>;
   removeProductCart: (productId: string) => Promise<void>;
   cart: StorageCartProps[];
-}
+};
 
 type CartContextProviderProps = {
   children: ReactNode;
-}
+};
 
-export const CartContext = createContext<CartContextDataProps>({} as CartContextDataProps);
+export const CartContext = createContext<CartContextDataProps>(
+  {} as CartContextDataProps
+);
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
   const [cart, setCart] = useState<StorageCartProps[]>([]);
@@ -25,6 +29,11 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   async function addProductCart(newProduct: StorageCartProps) {
     try {
       const storageResponse = await storageProductSave(newProduct);
+
+      const cartItensCount = storageResponse.length;
+
+      tagCartCreate(cartItensCount);
+
       setCart(storageResponse);
     } catch (error) {
       throw error;
@@ -34,6 +43,11 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   async function removeProductCart(productId: string) {
     try {
       const response = await storageProductRemove(productId);
+
+      const cartItensCount = response.length;
+
+      tagCartCreate(cartItensCount);
+
       setCart(response);
     } catch (error) {
       throw error;
@@ -42,17 +56,19 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
 
   useEffect(() => {
     storageProductGetAll()
-      .then(products => setCart(products))
-      .catch(error => console.log(error));
+      .then((products) => setCart(products))
+      .catch((error) => console.log(error));
   }, []);
 
   return (
-    <CartContext.Provider value={{
-      cart,
-      addProductCart,
-      removeProductCart,
-    }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addProductCart,
+        removeProductCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
-  )
+  );
 }
