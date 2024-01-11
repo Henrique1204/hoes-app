@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Platform, StatusBar } from "react-native";
 
 import OneSignal from "react-native-onesignal";
@@ -29,9 +31,7 @@ OneSignal.setAppId(oneSingalAppId);
 
 tagUserEmailCreate("pauloh16.pdr@gmail.com");
 
-OneSignal.promptForPushNotificationsWithUserResponse((response) => {
-  console.log({ response });
-});
+OneSignal.promptForPushNotificationsWithUserResponse(() => {});
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
